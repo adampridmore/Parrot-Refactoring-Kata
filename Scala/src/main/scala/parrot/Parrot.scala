@@ -1,31 +1,17 @@
 package parrot
 
-import parrot.ParrotType._
+trait Parrot {
+  def speed: Double = 12.0
+  protected def loadFactor: Double = 9.0
+}
 
-class Parrot(parrotType: ParrotType, numberOfCoconuts: Int, voltage: Double, isNailed: Boolean) {
+class EuropeanParrot extends Parrot
 
-  def getSpeed: Double = {
-    parrotType match {
-      case EUROPEAN =>
-        return getBaseSpeed
-      case AFRICAN =>
-        return Math.max(0, getBaseSpeed - getLoadFactor * numberOfCoconuts)
-      case NORWEGIAN_BLUE =>
-        return if ((isNailed)) 0 else getBaseSpeed(voltage)
-    }
-    throw new RuntimeException("Should be unreachable")
-  }
-
-  private def getBaseSpeed(voltage: Double): Double = {
-    return Math.min(24.0, voltage * getBaseSpeed)
-  }
-
-  private def getLoadFactor: Double = {
-    return 9.0
-  }
-
-  private def getBaseSpeed: Double = {
-    return 12.0
-  }
-
+class AfricanParrot(val numberOfCoconuts: Int) extends Parrot {
+  override def speed: Double = Math.max(0, super.speed - loadFactor * numberOfCoconuts)
+}
+class NorwegianBlueParrot(voltage: Double, isNailed: Boolean) extends Parrot {
+ override def speed: Double = 
+    if (isNailed) 0
+    else Math.min(24.0, voltage * super.speed)
 }
